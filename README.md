@@ -5,6 +5,9 @@
 ## Installation
 
 ```
-pip install -r requirementes.txt
-python main.py
+pip3 install -r requirementes.txt
+python3 src/django/manage.py runserver
 ```
+
+
+
