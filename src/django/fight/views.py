@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from src.django.monster.models import Monster
+from src.django.monster.models import Monster, FightMonster
 from src.django.hero.models import Hero
 from src.django.fight.service import FightService
 
@@ -36,28 +36,28 @@ class StartFightView(APIView):
         if hero.hp <= 0:
             return Response({"error": "Hero is not alive"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if monster_id:
-            try:
-                monster = Monster.objects.get(id=monster_id)
-            except Monster.DoesNotExist:
-                return Response({"error": "Monster not found"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            monster = Monster.objects.get(id=monster_id)
+        except Monster.DoesNotExist:
+            return Response({"error": "Monster not found"}, status=status.HTTP_404_NOT_FOUND)
         
         if monster.level > hero.level:
             return Response({"error": "Monster level is too high for the hero"}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer.is_valid(raise_exception=True)
         fight = Fight.objects.create(
-            hero_id=serializer.validated_data['hero_id'],
-            monster_id=serializer.validated_data['monster_id'],
+            hero_id=hero_id,
+            monster_id=monster_id,
             winner=None
         )
+        fight_monster = FightMonster.create_from_monster(fight=fight, monster=monster)
+
         response_serializer = StartFightResponseSerializer({
             'fight_id': fight.id,
             'hero_hp': hero.hp,
-            'monster_hp': monster.hp,
+            'monster_hp': fight_monster.hp,
             'turn': fight.turn,
             'winner': fight.winner,
             'hero_max_hp': hero.max_hp,
-            'monster_max_hp': monster.max_hp
+            'monster_max_hp': fight_monster.max_hp
         })
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)

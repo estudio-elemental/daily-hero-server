@@ -5,7 +5,7 @@ from src.core.monsters.domain.monster import Monster
 
 from src.django.fight.models import Fight as FightModel
 from src.django.hero.models import Hero as HeroModel
-from src.django.monster.models import Monster as MonsterModel
+from src.django.monster.models import FightMonster, Monster as MonsterModel
 
 
 class FightService:
@@ -14,11 +14,11 @@ class FightService:
         self.fight_model = FightModel.objects.get(id=fight_id)
 
     def handle_turn(self):
-        monster_model = MonsterModel.objects.get(id=self.fight_model.monster_id)
+        fight_monster = FightMonster.objects.get(fight=self.fight_model)
         hero_model = HeroModel.objects.get(id=self.fight_model.hero_id)
 
         hero = hero_model.to_entity()
-        monster = monster_model.to_entity()
+        monster = fight_monster.to_entity()
 
         if self.fight_model.turn == 'hero':
             hero.attack(monster)
@@ -45,10 +45,11 @@ class FightService:
         hero_model.defense = hero._defense
         hero_model.save()
 
-        monster_model.hp = monster.hp
+        fight_monster.hp = monster.hp
         if self.fight_model.turn == 'over':
-            monster_model.hp = monster.max_hp
-        monster_model.save()
+            fight_monster.delete()  # Deleta o FightMonster quando a luta acabar
+        else:
+            fight_monster.save()
 
         self.fight_model.save()
 
@@ -60,4 +61,3 @@ class FightService:
             'hero_max_hp': hero.max_hp,
             'monster_max_hp': monster.max_hp
         }
-        
