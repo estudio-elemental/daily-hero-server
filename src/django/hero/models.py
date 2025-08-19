@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from src.core.hero.domain.hero import Hero as HeroEntity
+
+
 User = get_user_model()
 
 class Hero(models.Model):
@@ -24,3 +27,13 @@ class Hero(models.Model):
     @property
     def is_alive(self):
         return self.hp > 0
+
+    def to_entity(self):
+        return HeroEntity(
+            level=self.level,
+            exp=self.exp,
+            max_hp=self.max_hp,
+            hp=self.hp,
+            _attack=self.attack,
+            _defense=self.defense
+        )

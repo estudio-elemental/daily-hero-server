@@ -17,7 +17,7 @@ class Hero(IHero):
 
     def attack(self, monster: IMonster) -> None:
         damage = randint(self._attack//3, self._attack)
-        print(f"Acerta um golpe com {damage} de dano")
+        print(f"Herói acerta um golpe com {damage} de dano")
         sleep(1)
         monster.defend(damage)
 
@@ -50,3 +50,7 @@ class Hero(IHero):
         if self.exp >= 100 * self.level:
             self.exp = 0
             self.level_up()
+
+    @property
+    def is_alive(self) -> bool:
+        return self.hp > 0
