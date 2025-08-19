@@ -14,7 +14,7 @@ class FightView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = FightRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         fight_service = FightService(fight_id=serializer.validated_data['fight_id'])
         response_data = fight_service.handle_turn()
 
@@ -38,11 +38,11 @@ class StartFightView(APIView):
 
         if monster_id:
             try:
-                Monster.objects.get(id=monster_id)
+                monster = Monster.objects.get(id=monster_id)
             except Monster.DoesNotExist:
                 return Response({"error": "Monster not found"}, status=status.HTTP_404_NOT_FOUND)
         
-        if monster_id > hero.level:
+        if monster.level > hero.level:
             return Response({"error": "Monster level is too high for the hero"}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.is_valid(raise_exception=True)
@@ -51,5 +51,13 @@ class StartFightView(APIView):
             monster_id=serializer.validated_data['monster_id'],
             winner=None
         )
-        response_serializer = StartFightResponseSerializer({'fight_id': fight.id})
+        response_serializer = StartFightResponseSerializer({
+            'fight_id': fight.id,
+            'hero_hp': hero.hp,
+            'monster_hp': monster.hp,
+            'turn': fight.turn,
+            'winner': fight.winner,
+            'hero_max_hp': hero.max_hp,
+            'monster_max_hp': monster.max_hp
+        })
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)

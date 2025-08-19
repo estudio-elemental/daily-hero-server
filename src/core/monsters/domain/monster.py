@@ -19,22 +19,22 @@ class Monster(IMonster):
     def attack(self, hero: IHero) -> None:
         damage = randint(self._attack//3, self._attack)
         print(f"{self.name} acerta um golpe com {damage} de dano")
-        sleep(1)
+        # sleep(1)
         hero.defend(damage)
 
     def defend(self, damage: int) -> None:
         defence = randint(self._defense//3, self._defense)
         print(f"{self.name} defende {defence} de dano.")
-        sleep(1)
+        # sleep(1)
         total_damage = damage - defence
         self.hp -= total_damage if total_damage > 0 else 0
         if self.hp <= 0:
             print(f"{self.name} morreu")
-            sleep(1)
+            # sleep(1)
 
         else:
             print(f"Hp do {self.name}: {self.hp}")
-            sleep(1)
+            # sleep(1)
 
     @property
     def is_alive(self) -> bool:

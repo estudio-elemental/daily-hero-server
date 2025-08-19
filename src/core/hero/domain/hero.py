@@ -18,21 +18,21 @@ class Hero(IHero):
     def attack(self, monster: IMonster) -> None:
         damage = randint(self._attack//3, self._attack)
         print(f"Herói acerta um golpe com {damage} de dano")
-        sleep(1)
+        # sleep(1)
         monster.defend(damage)
 
     def defend(self, damage: int) -> None:
         defence = randint(self._defense//3, self._defense)
         print(f"Herói defende {defence} de dano.")
-        sleep(1)
+        # sleep(1)
         total_damage = damage - defence
         self.hp -= total_damage if total_damage > 0 else 0
         if self.hp <= 0:
             print("Herói morreu")
-            sleep(1)
+            # sleep(1)
         else:
             print(f"Hp do Herói: {self.hp}")
-            sleep(1)
+            # sleep(1)
 
     def level_up(self):
         self.level += 1
@@ -40,7 +40,7 @@ class Hero(IHero):
         self._attack += 2
         self._defense += 1
         print(f"Herói evolui para o level {self.level}.")
-        sleep(1)
+        # sleep(1)
 
     def rest(self):
         self.hp = self.max_hp

@@ -47,7 +47,7 @@ class FightService:
 
         monster_model.hp = monster.hp
         if self.fight_model.turn == 'over':
-            monster_model.hp = monster.max_hp  # Reset monster HP if fight is over
+            monster_model.hp = monster.max_hp
         monster_model.save()
 
         self.fight_model.save()
@@ -56,6 +56,8 @@ class FightService:
             'hero_hp': hero.hp,
             'monster_hp': monster.hp,
             'turn': self.fight_model.turn,
-            'winner': self.fight_model.winner
+            'winner': self.fight_model.winner,
+            'hero_max_hp': hero.max_hp,
+            'monster_max_hp': monster.max_hp
         }
         

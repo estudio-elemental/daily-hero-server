@@ -17,14 +17,14 @@ class Fight:
             print(f"Rodadaaa {round}!!!!")
             print()
 
-            sleep(1)
+            # sleep(1)
             print(f"Ataque do {self.monster.name}")
             self.monster.attack(self.hero)
             if self.hero.hp <= 0:
                 break
             print()
 
-            sleep(3)
+            # sleep(3)
             print(f"Ataque do herói")
             self.hero.attack(self.monster)
             if self.monster.hp <= 0:
@@ -32,7 +32,7 @@ class Fight:
                 break
             print()
 
-            sleep(3)
+            # sleep(3)
             round += 1
 
         print()
