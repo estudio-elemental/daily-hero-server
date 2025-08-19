@@ -14,6 +14,14 @@ class HeroViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         return Hero.objects.filter(user=self.request.user)
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        hero = queryset.first()
+        if hero:
+            serializer = self.get_serializer(hero)
+            return Response(serializer.data)
+        return Response({}, status=404)
+
     @action(detail=False, methods=['get'])
     def my_hero(self, request):
         """
