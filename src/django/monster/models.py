@@ -39,8 +39,8 @@ class Monster(models.Model):
 class FightMonster(models.Model):
     fight = models.ForeignKey(Fight, on_delete=models.CASCADE, related_name='fight_monsters')
     monster = models.ForeignKey('Monster', on_delete=models.CASCADE)
-    hp = models.IntegerField(default=100, verbose_name="Pontos de Vida")
-    max_hp = models.IntegerField(default=100, verbose_name="Pontos de Vida Máximos")
+    hp = models.IntegerField(default=5, verbose_name="Pontos de Vida")
+    max_hp = models.IntegerField(default=5, verbose_name="Pontos de Vida Máximos")
     name = models.CharField(max_length=100)
     level = models.IntegerField()
     exp_earn = models.IntegerField()

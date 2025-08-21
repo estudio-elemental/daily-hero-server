@@ -6,6 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from datetime import timedelta
 from .serializers import RegisterSerializer, LoginSerializer, LogoutSerializer, UserSerializer
+from src.django.hero.models import Hero
 
 User = get_user_model()
 
@@ -14,6 +15,21 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
+
+    def perform_create(self, serializer):
+        # Cria o usuário
+        user = serializer.save()
+        
+        # Cria o herói associado ao usuário
+        Hero.objects.create(
+            user=user,
+            level=1,
+            exp=0,
+            max_hp=5,
+            hp=5,
+            attack=3,
+            defense=1
+        )
 
 
 class LoginView(generics.GenericAPIView):
