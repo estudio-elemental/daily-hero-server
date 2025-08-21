@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,13 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-gf%@+57)xtv#2=rsyls3z03-d10kjvi0_=d^l&cz33_k#-jr1w'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'davidbarenco.pythonanywhere.com']
 
 # Application definition
 
@@ -123,7 +123,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -175,6 +176,6 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",
-# ]
+CSRF_TRUSTED_ORIGINS = [
+    'https://davidbarenco.pythonanywhere.com',
+]
