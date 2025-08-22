@@ -3,6 +3,10 @@ from django.db import models
 from src.core.monsters.domain.monster import Monster as MonsterEntity
 from src.django.fight.models import Fight
 
+def monster_image_path(instance, filename):
+    # Files will be uploaded to MEDIA_ROOT/monsters/<monster_name>/<filename>
+    return f'monsters/{instance.name}/{filename}'
+
 class Monster(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nome")
     level = models.IntegerField(default=1, verbose_name="Nível")
@@ -10,6 +14,7 @@ class Monster(models.Model):
     hp = models.IntegerField(default=100, verbose_name="Pontos de Vida")
     attack = models.IntegerField(default=20, verbose_name="Ataque")
     defense = models.IntegerField(default=15, verbose_name="Defesa")
+    image = models.ImageField(upload_to=monster_image_path, verbose_name="Imagem", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Atualizado em")
 

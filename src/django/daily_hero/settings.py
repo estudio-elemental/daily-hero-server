@@ -23,8 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = bool(os.getenv('DEBUG', 'False'))
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'davidbarenco.pythonanywhere.com']
 
@@ -127,6 +128,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -180,6 +185,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = [
     'https://davidbarenco.pythonanywhere.com',
+    'https://daily-hero-client-ki9jyxw9k-davids-projects-bc9d3414.vercel.app/',
 ]
 
 # Spectacular Settings

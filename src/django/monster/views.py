@@ -46,6 +46,11 @@ class MonsterViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = MonsterFilter
     filter_backends = [DjangoFilterBackend]
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
     @extend_schema(
         description='List monsters available to the current hero based on their level',
         responses={200: MonsterSerializer(many=True)}
