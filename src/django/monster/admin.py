@@ -5,10 +5,10 @@ from .models import Monster
 
 @admin.register(Monster)
 class MonsterAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'level', 'hp', 'attack', 'defense', 'exp_earn', 'image_preview', 'created_at']
+    list_display = ['name', 'level', 'hp', 'attack', 'defense', 'exp_earn', 'image_preview', 'created_at']
     list_filter = ['level', 'created_at']
     search_fields = ['name']
-    list_editable = ['hp', 'attack', 'defense', 'exp_earn']
+    list_editable = ['level', 'hp', 'attack', 'defense', 'exp_earn']
     readonly_fields = ['created_at', 'updated_at', 'image_preview_large']
     
     fieldsets = (

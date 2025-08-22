@@ -6,6 +6,7 @@ from .models import Hero
 class HeroAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'level', 'hp', 'max_hp', 'attack', 'defense', 'created_at']
     list_filter = ['level', 'created_at']
+    list_editable = ['hp',]
     search_fields = ['user__username']
     readonly_fields = ['created_at', 'updated_at']
     
