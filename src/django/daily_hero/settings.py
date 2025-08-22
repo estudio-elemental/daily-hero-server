@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'corsheaders',
+    'drf_spectacular',
     
     # Local apps
     'src.django.hero',
@@ -144,7 +145,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 
@@ -179,3 +181,18 @@ CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = [
     'https://davidbarenco.pythonanywhere.com',
 ]
+
+# Spectacular Settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Daily Hero API',
+    'DESCRIPTION': 'API para o jogo Daily Hero - Um jogo de RPG diário',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'TAGS': [
+        {'name': 'auth', 'description': 'Autenticação e gerenciamento de usuários'},
+        {'name': 'hero', 'description': 'Operações relacionadas aos heróis'},
+        {'name': 'monster', 'description': 'Operações relacionadas aos monstros'},
+        {'name': 'fight', 'description': 'Sistema de combate'},
+    ],
+}

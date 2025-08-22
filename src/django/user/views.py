@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from datetime import timedelta
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 from .serializers import RegisterSerializer, LoginSerializer, LogoutSerializer, UserSerializer
 from src.django.hero.models import Hero
 
@@ -12,10 +13,16 @@ User = get_user_model()
 
 
 class RegisterView(generics.CreateAPIView):
+    """Create a new user account and associated hero."""
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
+    @extend_schema(
+        tags=['auth'],
+        description='Create a new user account. A hero will be automatically created for the user.',
+        responses={201: UserSerializer}
+    )
     def perform_create(self, serializer):
         # Cria o usuário
         user = serializer.save()
@@ -33,9 +40,28 @@ class RegisterView(generics.CreateAPIView):
 
 
 class LoginView(generics.GenericAPIView):
+    """Login view to obtain JWT tokens."""
     permission_classes = (AllowAny,)
     serializer_class = LoginSerializer
 
+    @extend_schema(
+        tags=['auth'],
+        description='Log in with email and password to obtain JWT tokens',
+        responses={
+            200: OpenApiResponse(
+                description='Login successful',
+                response={
+                    'type': 'object',
+                    'properties': {
+                        'refresh': {'type': 'string'},
+                        'access': {'type': 'string'},
+                        'user': {'type': 'object'}
+                    }
+                }
+            ),
+            400: OpenApiResponse(description='Invalid credentials')
+        }
+    )
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -50,17 +76,34 @@ class LoginView(generics.GenericAPIView):
         })
 
 
-class UserProfileView(generics.RetrieveUpdateAPIView):
+class UserProfileView(generics.RetrieveAPIView):
+    """View to retrieve and update user profile information."""
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
 
+    @extend_schema(
+        tags=['auth'],
+        description='Get current user profile',
+        responses={200: UserSerializer}
+    )
     def get_object(self):
         return self.request.user
 
 
+@extend_schema(
+    tags=['auth'],
+    description='Log out by blacklisting the refresh token',
+    request=LogoutSerializer,
+    responses={
+        200: OpenApiResponse(description='Logout successful'),
+        400: OpenApiResponse(description='Invalid token'),
+        500: OpenApiResponse(description='Internal server error')
+    }
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout(request):
+    """Logout view to blacklist the refresh token."""
     try:
         serializer = LogoutSerializer(data=request.data)
         if not serializer.is_valid():
